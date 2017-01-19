@@ -1,0 +1,11 @@
+{
+    "elements":
+    [
+		{ "type": "Label", "label": "API Authentication" },
+		{ "name": "key", "type": "ValidationTextBox", "caption": "Key:" },
+		{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },
+		{ "type": "Label", "label": "Other settings" },
+		{ "type": "CheckBox", "name": "Log", "caption": "Enable logging:" }
+    ],
+
+}
