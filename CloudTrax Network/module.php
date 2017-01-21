@@ -12,7 +12,9 @@ class CloudTraxNetwork extends IPSModule {
 		
 		$this->RegisterPropertyString("key", "");
 		$this->RegisterPropertyString("secret", "");
-
+		
+		$this->RegisterPropertyString("network", "");
+		
    }
 
     public function ApplyChanges(){
@@ -25,6 +27,19 @@ class CloudTraxNetwork extends IPSModule {
 		$secret = this->ReadPropertyString('secret');
 		if(strlen($secret)==0)
 			return;
+		
+				
+		$networks = $this->ReadPropertyString('networks');
+		$ct = new CloudTraxNetwork($key, $secret);
+		if(strlen($networks) = 0) {
+			$ct->LoadNetworks();
+			$networks = $ct->GetNetworks();
+		} else {
+			
+			$ct->LoadSSIDs('');
+		}
+			
+		
 		
 		
 		

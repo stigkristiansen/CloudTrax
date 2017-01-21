@@ -4,6 +4,12 @@
 		{ "type": "Label", "label": "API Authentication" },
 		{ "name": "key", "type": "ValidationTextBox", "caption": "Key:" },
 		{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },
+		{ "type": "Select", "name": "network", "caption": "Network",
+			"options": [
+				{ "label": "BM123", "value": "bm123" },
+				{ "label": "HS67", "value": "hs67" }
+			]
+		},
 		{ "type": "Label", "label": "Other settings" },
 		{ "type": "CheckBox", "name": "Log", "caption": "Enable logging:" }
     ],
