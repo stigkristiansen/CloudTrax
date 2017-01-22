@@ -6,9 +6,7 @@
 		{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },
 		{ "type": "Select", "name": "network", "caption": "Network",
 			"options": [
-				{ "label": "Click Refresh Networks", "value": "<<none>>" },
-				{ "label": "BM123", "value": "12345" },
-				{ "label": "HS67", "value": "54321" }
+				{ "label": "Click Refresh Networks", "value": 0 },
 			]
 		},
 		{ "type": "Label", "label": "Other settings" },
