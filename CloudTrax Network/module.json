@@ -1,11 +1,11 @@
 { 
     "id" :  "{F8600092-55F9-4E84-9FB7-03D3591754BF}" , 
-    "name" :  "CloudTraxNetwork" , 
+    "name" :  "CloudTraxNetworkModule" , 
     "type" :  2 , 
     "vendor" :  "Stig Kristiansen" , 
     "aliases" : 
     [ 
-        "Cloud trax Network"  
+        "Cloud Trax Network"  
     ] ,   
     "parentRequirements" :  [] , 
     "childRequirements" :  [] , 

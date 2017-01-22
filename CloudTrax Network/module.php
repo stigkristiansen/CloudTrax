@@ -3,7 +3,7 @@
 require_once(__DIR__ . "/../logging.php");
 require_once(__DIR__ . "/../cloudtrax.php");
 
-class CloudTraxNetwork extends IPSModule {
+class CloudTraxNetworkModule extends IPSModule {
 
    public function Create(){
         parent::Create();
