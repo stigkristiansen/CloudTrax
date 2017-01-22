@@ -47,7 +47,7 @@ class CloudTraxNetwork extends IPSModule {
 		if(strlen($key)==0)
 			return;
 		
-		$secret = this->ReadPropertyString('secret');
+		$secret = $this->ReadPropertyString('secret');
 		if(strlen($secret)==0)
 			return;
 		
