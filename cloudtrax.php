@@ -25,7 +25,7 @@ class CloudTraxCommunication {
 		$this->secret = $Secret;
 	}
 	
-	protected function CallApiServer($method, $endpoint, $data) {
+	public function CallApiServer($method, $endpoint, $data) {
 	    global $key, $secret;
 	    
 	    $time = time();
@@ -48,7 +48,7 @@ class CloudTraxCommunication {
 		$authorization = "key=" . $this->key . ",timestamp=" . $time . ",nonce=" . $nonce;
 	    $signature =  hash_hmac('sha256', $authorization . $path . $body, $this->secret);
 	    $headers = $this->BuildHeaders($authorization, $signature);
-	    
+	 
 	    return $this->InvokeCurl($method, $endpoint, $headers, $json);
 	
 	}
@@ -85,7 +85,7 @@ class CloudTraxCommunication {
 	        
 	        $result = curl_exec($ch);
 			
-	        if ($result == FALSE) {
+			if ($result == FALSE) {
 	            if (curl_errno($ch) == 0)
 	                echo "@@@@ NOTE @@@@: nil HTTP return: This API call appears to be broken" . "\n";
 	            else
@@ -104,14 +104,15 @@ class CloudTraxCommunication {
 	
 }
 
-class CloudTraxNetwork extends CloudTraxCommunication{
+class CloudTraxNetwork {
 	private $networkId;
 	private $ssids;
+	private $com;
 	
-	public function __construct($NetworkId, $Key, $Secret) {
-		parent::__construct($Key, $Secret);
-		
+	public function __construct($Com, $NetworkId) {
+				
 		$this->networkId = $NetworkId;
+		$this->com = $Com;
 		$this->ssids = $this->ListSSIDs();
 	}
 	
@@ -136,6 +137,8 @@ class CloudTraxNetwork extends CloudTraxCommunication{
 	public function EnableSSID($SSID, $Enable) {
 		$ssid = $this->GetSSIDNumberByName($SSID);
 		
+		echo "SSID number is: ".$ssid;
+		                                      	
 		if($ssid){
 			$data = array( 'ssids' => 
 				array( strval($ssid) => 
@@ -145,7 +148,7 @@ class CloudTraxNetwork extends CloudTraxCommunication{
 	            )
 	        );
 			
-			$result = json_decode($this->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
+			$result = json_decode($this->com->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
 			
 			if(array_key_exists('errors', $result))
 				return false;
@@ -170,7 +173,7 @@ class CloudTraxNetwork extends CloudTraxCommunication{
 							)
 				);
 			
-				$result = json_decode($this->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
+				$result = json_decode($this->com->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
 				
 				if(array_key_exists('errors', $result))
 					return false;
@@ -184,6 +187,9 @@ class CloudTraxNetwork extends CloudTraxCommunication{
 
 	}
 
+	
+	
+	
 	// private functions
 	
 	private function GetSSIDNumberByName($Name) {
@@ -206,7 +212,7 @@ class CloudTraxNetwork extends CloudTraxCommunication{
 	}
 
 	private function ListSSIDs() {
-		$jsonResult = $this->CallApiServer(Method::GET, "/network/".$this->networkId."/settings", NULL);
+		$jsonResult = $this->com->CallApiServer(Method::GET, "/network/".$this->networkId."/settings", NULL);
 		
 		$ids = json_decode($jsonResult, true)['ssids'];
 		
@@ -221,15 +227,13 @@ class CloudTraxNetwork extends CloudTraxCommunication{
 	}
 }
 
-class CloudTraxNetworks extends CloudTraxCommunication {
+class CloudTraxNetworks {
 	private $networks=false;
+	private $com;
 	
-	private $key; // '5e7a64754d6156de1e19896d57a2d6706fd22c0949ca924aea2f4653b141585c'
-	private $secret; // '3d9430cd14288e2d0521997f15188e53c161732a71bdce0712258eaf48c8bc5b'
-	
-	public function __construct($Key, $Secret) {
-		parent::__construct($Key, $Secret);
+	public function __construct($Com) {
 		
+		$this->com = $Com;
 		$this->networks = $this->ListNetworks();
 	}
 	
@@ -238,10 +242,16 @@ class CloudTraxNetworks extends CloudTraxCommunication {
 			
 	}
 	
+	public function GetNetworks() {
+		if($this->networks)
+			return $this->networks;
+		else
+			return false;
+	}
+	
 	public function GetNetworkIdByName($Network) {
 		$found = false;
 		
-		$Network = strtolower($Network);
 		foreach($this->networks as $network) {
 			if(strtolower($network['name'])==$Network) {
 				$found = true;
@@ -259,11 +269,11 @@ class CloudTraxNetworks extends CloudTraxCommunication {
 	// private functions
 	
 	private function ListNetworks() {
-		$jsonResult = $this->CallApiServer(Method::GET, "/network/list", NULL);
+		$jsonResult = $this->com->CallApiServer(Method::GET, "/network/list", NULL);
 		$result = json_decode($jsonResult, true)['networks'];
 		
 		foreach($result as $row) {
-			$name = strtolower($row['name']);
+			$name = $row['name'];
 			$id =   $row['id'];
 			$returnValue[] = Array('name' => $name, 'id' => $id );
 		}
@@ -273,5 +283,6 @@ class CloudTraxNetworks extends CloudTraxCommunication {
 	}
 
 }
+
 
 ?>

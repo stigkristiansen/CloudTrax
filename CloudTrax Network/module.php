@@ -13,8 +13,31 @@ class CloudTraxNetwork extends IPSModule {
 		$this->RegisterPropertyString("key", "");
 		$this->RegisterPropertyString("secret", "");
 		
-		$this->RegisterPropertyString("network", "");
+		$this->RegisterPropertyInteger("networks", -1);
 		
+   }
+   
+   public function GetConfigurationForm(){
+	   $returnValue = '{
+							"elements":
+						[
+							{ "type": "Label", "label": "API Authentication" },
+							{ "name": "key", "type": "ValidationTextBox", "caption": "Key:" },
+							{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },
+							{ "type": "Select", "name": "network", "caption": "Network",
+								"options": [
+									{ "label": "Click Refresh Networks", "value": "<<none>>" },
+									{ "label": "BM123", "value": "12345" },
+									{ "label": "HS67", "value": "54321" }
+								]
+							},
+							{ "type": "Label", "label": "Other settings" },
+							{ "type": "CheckBox", "name": "Log", "caption": "Enable logging:" }
+						],
+
+						}';
+						
+	   IPS_LogMessage('CloudTrax',GetBuffer('networks'));
    }
 
     public function ApplyChanges(){
@@ -29,15 +52,20 @@ class CloudTraxNetwork extends IPSModule {
 			return;
 		
 				
-		$networks = $this->ReadPropertyString('networks');
-		$ct = new CloudTraxNetwork($key, $secret);
-		if(strlen($networks) = 0) {
-			$ct->LoadNetworks();
-			$networks = $ct->GetNetworks();
-		} else {
+		$selectedNetwork = $this->ReadPropertyString('network');
+		
+		$ctc = new CloudTraxCommunication($key, $secret);
+		
+		//$networkId = $ctns->GetNetworkIdByName('bm123');
+		
+		if($selectedNetwork==-1) {
+			$ctns = new CloudTraxNetworks ($ctc);
+			$networks = $ctns->GetNetworks();
+			$this->SetBuffer('networks', json_encode($networks, true);
 			
-			$ct->LoadSSIDs('');
-		}
+		} 
+		
+		IPS_LogMessage('CloudTrax',GetBuffer('networks'));
 			
 		
 		
