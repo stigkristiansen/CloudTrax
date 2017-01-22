@@ -37,7 +37,7 @@ class CloudTraxNetworkModule extends IPSModule {
 
 						}';
 						
-	   IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".GetBuffer('networks'));
+	   IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer('networks'));
    }
 
     public function ApplyChanges(){
