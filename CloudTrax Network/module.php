@@ -13,7 +13,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		$this->RegisterPropertyString("key", "");
 		$this->RegisterPropertyString("secret", "");
 		
-		$this->RegisterPropertyInteger("networks", -1);
+		$this->RegisterPropertyInteger("network", -1);
 		
    }
    
@@ -26,9 +26,9 @@ class CloudTraxNetworkModule extends IPSModule {
 							{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },
 							{ "type": "Select", "name": "network", "caption": "Network",
 								"options": [
-									{ "label": "Click Refresh Networks", "value": "<<none>>" },
-									{ "label": "BM123", "value": "12345" },
-									{ "label": "HS67", "value": "54321" }
+									{ "label": "Click Refresh Networks", "value": -1 },
+									{ "label": "BM123", "value": 12345 },
+									{ "label": "HS67", "value": 54321 }
 								]
 							},
 							{ "type": "Label", "label": "Other settings" },
