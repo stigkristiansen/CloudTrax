@@ -21,7 +21,7 @@ class CloudTraxNetworkModule extends IPSModule {
 
 		$networks = $this->GetBuffer('networks');
 	   
-		if($networks){
+		if(sizeof($networks) > 0){
 			$options = "";
 		} else
 			$options = '{ "type": "Label", "label": "Fill in API Authentication information and click Apply!" },';
