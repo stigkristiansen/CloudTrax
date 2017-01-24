@@ -34,9 +34,7 @@ class CloudTraxNetworkModule extends IPSModule {
 				$option = '{ "label": "'.$name.'", "value": '.$id.' },';
 				$options .= $option;
 			}
-									//{ "label": "Click Refresh Networks", "value": 0 },
-									//{ "label": "BM123", "value": 12345 },
-									//{ "label": "HS67", "value": 54321 }
+
 			$options .= '					]
 							},';
 		} else
@@ -69,13 +67,12 @@ class CloudTraxNetworkModule extends IPSModule {
 			return;
 		
 				
-		$selectedNetwork = $this->ReadPropertyString('network');
+		//$selectedNetwork = $this->ReadPropertyString('network');
 		
 		$ctc = new CloudTraxCommunication($key, $secret);
 		
-		//$networkId = $ctns->GetNetworkIdByName('bm123');
-		
-		if($selectedNetwork==0) {
+				
+		if(strlen($this->GetBuffer('networks')==0) {
 			$ctns = new CloudTraxNetworks ($ctc);
 			$networks = $ctns->GetNetworks();
 			$this->SetBuffer('networks', json_encode($networks, true));
