@@ -76,7 +76,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			return false;
 			
 		$ctc = new CloudTraxCommunication($key, $secret);
-		$ctn = new CloudTrax($ctc, $networkId);
+		$ctn = new CloudTraxNetwork($ctc, $networkId);
 		
 		return $ctn->EnableSSID($SSID, $Enable);
 			
