@@ -20,35 +20,24 @@ class CloudTraxNetworkModule extends IPSModule {
    public function GetConfigurationForm(){
 	   $networks = $this->GetBuffer('networks');
 	   
-	   if($networks) {
-		   $networkOptions = '{ "type": "Select", "name": "network", "caption": "Network",
-								"options": [';
-			
-			foreach($networks as $network) {
-				//$networkOptions .= '{ "label": '.$network['name'].',"value": '.$network['id'].'},'
-			}
-			
-		   $networkOptions .= ']},';
-		}
-		else {
-			$networkOptions = '{ "type": "Label", "label": "Fill inn API Authentication and click Apply." },'
-			
-		}
-	   
 	   $returnValue = '{
 							"elements":
 						[
 							{ "type": "Label", "label": "API Authentication" },
 							{ "name": "key", "type": "ValidationTextBox", "caption": "Key:" },
 							{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },
-							'.$networkOptions.'
+							{ "type": "Select", "name": "network", "caption": "Network",
+								"options": [
+									{ "label": "Click Refresh Networks", "value": 0 },
+									{ "label": "BM123", "value": 12345 },
+									{ "label": "HS67", "value": 54321 }
+								]
+							},
 							{ "type": "Label", "label": "Other settings" },
 							{ "type": "CheckBox", "name": "Log", "caption": "Enable logging:" }
 						],
 
 						}';
-						
-	   IPS_LogMessage('CloudTrax',"GetConfigForm - Form: ".$returnValue);
 	   
 	   return $returnValue;
    }
