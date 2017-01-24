@@ -19,9 +19,14 @@ class CloudTraxNetworkModule extends IPSModule {
    
    public function GetConfigurationForm(){
 
-	   $networks = $this->GetBuffer('networks');
+		$networks = $this->GetBuffer('networks');
+	   
+		if($networks){
+			$options = "";
+		} else
+			$options = '{ "type": "Label", "label": "Fill in API Authentication information and click Apply!" },';
 						
-	   IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer('networks'));
+		IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer('networks'));
 	   
 		$form = '{"elements":
 						[
@@ -40,7 +45,7 @@ class CloudTraxNetworkModule extends IPSModule {
 						],
 						}';
 
-	   return $form;
+		return $form;
    }
 
     public function ApplyChanges(){
