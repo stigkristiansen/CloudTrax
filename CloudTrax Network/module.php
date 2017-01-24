@@ -23,11 +23,11 @@ class CloudTraxNetworkModule extends IPSModule {
 	   
 		if(sizeof($networks) > 0){
 			$options = '{ "type": "Select", "name": "network", "caption": "Network",
-								"options": [
-									{ "label": "Click Refresh Networks", "value": 0 },
-									{ "label": "BM123", "value": 12345 },
-									{ "label": "HS67", "value": 54321 }
-								]
+								"options": [';
+									//{ "label": "Click Refresh Networks", "value": 0 },
+									//{ "label": "BM123", "value": 12345 },
+									//{ "label": "HS67", "value": 54321 }
+			$option .= '					]
 							},';
 		} else
 			$options = '{ "type": "Label", "label": "Register API Authentication information and press Apply!" },';
