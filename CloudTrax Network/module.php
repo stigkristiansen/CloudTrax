@@ -21,8 +21,8 @@ class CloudTraxNetworkModule extends IPSModule {
 	   $networks = $this->GetBuffer('networks');
 	   
 	   if($networks) {
-		   $networkOptions = "{ "type": "Select", "name": "network", "caption": "Network",
-								"options": [";
+		   $networkOptions = '{ "type": "Select", "name": "network", "caption": "Network",
+								"options": [';
 			
 			foreach($networks as $network) {
 				$networkOptions .= '{ "label": '.$network['name'].',"value": '.$network['id'].'},'
