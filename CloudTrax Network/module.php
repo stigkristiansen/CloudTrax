@@ -3,14 +3,14 @@
 require_once(__DIR__ . "/../logging.php");
 require_once(__DIR__ . "/../cloudtrax.php");
 
-define('IPS_KERNELMESSAGE', IPS_BASE + 100);           //Kernel Message
-define('KR_CREATE', IPS_KERNELMESSAGE + 1);            //Kernel is beeing created
-define('KR_INIT', IPS_KERNELMESSAGE + 2);              //Kernel Components are beeing initialised, Modules loaded, Settings read
-define('KR_READY', IPS_KERNELMESSAGE + 3);             //Kernel is ready and running
-define('KR_UNINIT', IPS_KERNELMESSAGE + 4);            //Got Shutdown Message, unloading all stuff
-define('KR_SHUTDOWN', IPS_KERNELMESSAGE + 5);  
 
 class CloudTraxNetworkModule extends IPSModule {
+	define('IPS_KERNELMESSAGE', IPS_BASE + 100);           //Kernel Message
+	define('KR_CREATE', IPS_KERNELMESSAGE + 1);            //Kernel is beeing created
+	define('KR_INIT', IPS_KERNELMESSAGE + 2);              //Kernel Components are beeing initialised, Modules loaded, Settings read
+	define('KR_READY', IPS_KERNELMESSAGE + 3);             //Kernel is ready and running
+	define('KR_UNINIT', IPS_KERNELMESSAGE + 4);            //Got Shutdown Message, unloading all stuff
+	define('KR_SHUTDOWN', IPS_KERNELMESSAGE + 5);  
 
    public function Create(){
         parent::Create();
