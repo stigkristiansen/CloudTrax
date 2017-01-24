@@ -25,7 +25,8 @@ class CloudTraxNetworkModule extends IPSModule {
 			$options = '{ "type": "Select", "name": "network", "caption": "Network",
 								"options": [';
 								
-			$option = '';
+			$option = '{ "label": "Select a network", "value": 0 },';
+			$options .= $option;
 			$networks = json_decode($networksJSON, true);
 			foreach($networks as $network) {
 				$name = $network['name'];
