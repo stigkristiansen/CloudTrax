@@ -61,7 +61,7 @@ class CloudTraxNetworkModule extends IPSModule {
 				$ssidList.= strlen($ssidList)==0?$name:', '.$name;
 			}
 				
-			$ssidInfo '{ "type": "Label", "label": "Available SSIDs: '.$ssidList.'" },';
+			$ssidInfo = '{ "type": "Label", "label": "Available SSIDs: '.$ssidList.'" },';
 		}
 		
 		$form = '{"elements":
