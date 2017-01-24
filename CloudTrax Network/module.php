@@ -22,9 +22,15 @@ class CloudTraxNetworkModule extends IPSModule {
 		$networks = $this->GetBuffer('networks');
 	   
 		if(sizeof($networks) > 0){
-			$options = "";
+			$options = '{ "type": "Select", "name": "network", "caption": "Network",
+								"options": [
+									{ "label": "Click Refresh Networks", "value": 0 },
+									{ "label": "BM123", "value": 12345 },
+									{ "label": "HS67", "value": 54321 }
+								]
+							},';
 		} else
-			$options = '{ "type": "Label", "label": "Fill in API Authentication information and click Apply!" },';
+			$options = '{ "type": "Label", "label": "Register API Authentication information and press Apply!" },';
 						
 		IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer('networks'));
 	   
