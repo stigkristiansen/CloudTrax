@@ -62,7 +62,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		
     }
 	
-	public function EnableSSID($SSID, $Enable) {
+	public function EnableSSID(string $SSID, bool $Enable) {
 		$key = $this->ReadPropertyString('key');
 		if(strlen($key)==0)
 			return false;
