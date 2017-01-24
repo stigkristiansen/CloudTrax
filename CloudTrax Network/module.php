@@ -25,7 +25,7 @@ class CloudTraxNetworkModule extends IPSModule {
 								"options": [';
 			
 			foreach($networks as $network) {
-				$networkOptions .= '{ "label": '.$network['name'].',"value": '.$network['id'].'},'
+				//$networkOptions .= '{ "label": '.$network['name'].',"value": '.$network['id'].'},'
 			}
 			
 		   $networkOptions .= ']},';
