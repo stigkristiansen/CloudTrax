@@ -19,13 +19,14 @@ class CloudTraxNetworkModule extends IPSModule {
    
    public function GetConfigurationForm(){
 
-		$networks = $this->GetBuffer('networks');
+		$networksJSON = $this->GetBuffer('networks') ;
 	   
-		if(sizeof($networks) > 0){
+		if(strlen($networksJSON) > 0){
 			$options = '{ "type": "Select", "name": "network", "caption": "Network",
 								"options": [';
 								
 			$option = '';
+			$networks = json_decode($networksJSON, true);
 			foreach($networks as $network) {
 				$name = $network['name'];
 				$id = $network['id'];
