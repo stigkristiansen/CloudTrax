@@ -47,15 +47,8 @@ class CloudTraxNetworkModule extends IPSModule {
 						[
 							{ "type": "Label", "label": "API Authentication" },
 							{ "name": "key", "type": "ValidationTextBox", "caption": "Key:" },
-							{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },
-							{ "type": "Select", "name": "network", "caption": "Network",
-								"options": [
-									{ "label": "Click Refresh Networks", "value": 0 },
-									{ "label": "BM123", "value": 12345 },
-									{ "label": "HS67", "value": 54321 }
-								]
-							},
-							{ "type": "Label", "label": "Other settings" },
+							{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },'.$options.
+							'{ "type": "Label", "label": "Other settings" },
 							{ "type": "CheckBox", "name": "Log", "caption": "Enable logging:" }
 						],
 						}';
