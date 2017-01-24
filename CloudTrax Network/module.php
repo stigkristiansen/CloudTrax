@@ -3,6 +3,13 @@
 require_once(__DIR__ . "/../logging.php");
 require_once(__DIR__ . "/../cloudtrax.php");
 
+define('IPS_KERNELMESSAGE', IPS_BASE + 100);           //Kernel Message
+define('KR_CREATE', IPS_KERNELMESSAGE + 1);            //Kernel is beeing created
+define('KR_INIT', IPS_KERNELMESSAGE + 2);              //Kernel Components are beeing initialised, Modules loaded, Settings read
+define('KR_READY', IPS_KERNELMESSAGE + 3);             //Kernel is ready and running
+define('KR_UNINIT', IPS_KERNELMESSAGE + 4);            //Got Shutdown Message, unloading all stuff
+define('KR_SHUTDOWN', IPS_KERNELMESSAGE + 5);  
+
 class CloudTraxNetworkModule extends IPSModule {
 
    public function Create(){
@@ -19,7 +26,7 @@ class CloudTraxNetworkModule extends IPSModule {
    
    public function GetConfigurationForm(){
 
-		$networksJSON = $this->GetBuffer('networks') ;
+		$networksJSON = $this->GetBuffer($this->InstanceID.'networks') ;
 	   
 		if(strlen($networksJSON) > 0){
 			$options = '{ "type": "Select", "name": "network", "caption": "Network",
@@ -40,7 +47,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		} else
 			$options = '{ "type": "Label", "label": "Register API Authentication information and press Apply!" },';
 						
-		IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer('networks'));
+		IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer($this->InstanceID.'networks'));
 	   
 		$form = '{"elements":
 						[
@@ -57,7 +64,7 @@ class CloudTraxNetworkModule extends IPSModule {
 
     public function ApplyChanges(){
         parent::ApplyChanges();
-		
+
 		$key = $this->ReadPropertyString('key');
 		if(strlen($key)==0)
 			return;
@@ -72,21 +79,33 @@ class CloudTraxNetworkModule extends IPSModule {
 		$ctc = new CloudTraxCommunication($key, $secret);
 		
 		// Remember to make the buffer name uniqe		
-		if(strlen($this->GetBuffer('networks'))==0) {
+		if(strlen($this->GetBuffer($this->InstanceID.'networks'))==0) {
 			$ctns = new CloudTraxNetworks ($ctc);
 			$networks = $ctns->GetNetworks();
-			$this->SetBuffer('networks', json_encode($networks, true));
+			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));
 			
 		} 
 		
-		IPS_LogMessage('CloudTrax',"Apply - Setbuffer to: ".$this->GetBuffer('networks'));
+		IPS_LogMessage('CloudTrax',"Apply - Set buffer to: ".$this->GetBuffer($this->InstanceID.'networks'));
 			
-		
+		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
 		
 		
 		
     }
-
+	
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+		switch ($Message) {
+			case IPS_KERNELMESSAGE:
+				switch ($Data[0]){
+					case KR_READY:
+						IPS_LogMessage('CloudTrax', 'Kernel ready!');
+						break;
+					
+				}
+				break;
+		}	
+	}
 		
 	private function Lock($Ident) {
         $log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
