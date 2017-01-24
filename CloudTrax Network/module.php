@@ -28,7 +28,7 @@ class CloudTraxNetworkModule extends IPSModule {
    
    public function GetConfigurationForm(){
 
-		$networksJSON = $this->GetBuffer($this->InstanceID.'networks') ;
+		$networksJSON = $this->GetBuffer($this->InstanceID.'networks');
 	   
 		if(strlen($networksJSON) > 0){
 			$options = '{ "type": "Select", "name": "network", "caption": "Network",
@@ -51,11 +51,24 @@ class CloudTraxNetworkModule extends IPSModule {
 						
 		IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer($this->InstanceID.'networks'));
 	   
+		$ssidsJSON = $this->GetBuffer($this->InstanceID.'ssids') ;
+		
+		$ssidInfo = "";
+		if(strlen($ssidsJSON) > 0){
+			$ssids = json_decode($ssidsJSON, true);
+			foreach($ssids as $ssid) {
+				$name = $ssid['name'];
+				$ssidList.= strlen($ssidList)==0?$name:', '.$name;
+			}
+				
+			$ssidInfo '{ "type": "Label", "label": "Available SSIDs: '.$ssidList.'" },';
+		}
+		
 		$form = '{"elements":
 						[
 							{ "type": "Label", "label": "API Authentication" },
 							{ "name": "key", "type": "ValidationTextBox", "caption": "Key:" },
-							{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },'.$options.
+							{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },'.$options.$ssidInfo.
 							'{ "type": "Label", "label": "Other settings" },
 							{ "type": "CheckBox", "name": "Log", "caption": "Enable logging:" }
 						],
@@ -76,17 +89,21 @@ class CloudTraxNetworkModule extends IPSModule {
 			return;
 		
 				
-		//$selectedNetwork = $this->ReadPropertyString('network');
-		
 		$ctc = new CloudTraxCommunication($key, $secret);
 		
-		// Remember to make the buffer name uniqe		
 		if(strlen($this->GetBuffer($this->InstanceID.'networks'))==0) {
 			$ctns = new CloudTraxNetworks ($ctc);
 			$networks = $ctns->GetNetworks();
 			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));
 			
 		} 
+		
+		$selectedNetwork = $this->ReadPropertyString('network');
+		if($selectedNetwork>0 && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
+			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
+			$ssids = $ctn->GetSSIDs();
+			$this->SetBuffer($this->InstanceID.'ssids', json_encode($ssids, true));
+		}
 		
 		IPS_LogMessage('CloudTrax',"Apply - Set buffer to: ".$this->GetBuffer($this->InstanceID.'networks'));
 			
@@ -101,7 +118,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			case IPS_KERNELMESSAGE:
 				switch ($Data[0]){
 					case KR_READY:
-						IPS_LogMessage('CloudTrax', 'Kernel ready!');
+						//IPS_LogMessage('CloudTrax', 'Kernel ready!');
 						break;
 					
 				}
