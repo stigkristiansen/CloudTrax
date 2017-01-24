@@ -56,6 +56,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		$ssidInfo = "";
 		if(strlen($ssidsJSON) > 0){
 			$ssids = json_decode($ssidsJSON, true);
+			$ssidList = '';
 			foreach($ssids as $ssid) {
 				$name = $ssid['name'];
 				$ssidList.= strlen($ssidList)==0?$name:', '.$name;
