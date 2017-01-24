@@ -135,11 +135,11 @@ class CloudTraxNetwork {
 	}
 	
 	public function EnableSSID($SSID, $Enable) {
-		$ssid = $this->GetSSIDNumberByName($SSID);
+		//$ssid = $this->GetSSIDNumberByName($SSID);
 		
-		echo "SSID number is: ".$ssid;
+		//echo "SSID number is: ".$ssid;
 		                                      	
-		if($ssid){
+		//if($ssid){
 			$data = array( 'ssids' => 
 				array( strval($ssid) => 
 	                array( 'general' => 
@@ -155,8 +155,8 @@ class CloudTraxNetwork {
 			else
 				return true;
 					
-		} else 
-			return false;
+		//} else 
+		//	return false;
 
 	}
 	

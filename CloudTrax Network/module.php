@@ -26,6 +26,62 @@ class CloudTraxNetworkModule extends IPSModule {
 		
    }
    
+   public function ApplyChanges(){
+        parent::ApplyChanges();
+
+		$key = $this->ReadPropertyString('key');
+		if(strlen($key)==0)
+			return;
+		
+		$secret = $this->ReadPropertyString('secret');
+		if(strlen($secret)==0)
+			return;
+		
+				
+		$ctc = new CloudTraxCommunication($key, $secret);
+		
+		if(strlen($this->GetBuffer($this->InstanceID.'networks'))==0) {
+			$ctns = new CloudTraxNetworks ($ctc);
+			$networks = $ctns->GetNetworks();
+			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));
+			
+		} 
+		
+		$selectedNetwork = $this->ReadPropertyString('network');
+		if($selectedNetwork>0 && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
+			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
+			$ssids = $ctn->GetSSIDs();
+			$this->SetBuffer($this->InstanceID.'ssids', json_encode($ssids, true));
+		}
+		
+		IPS_LogMessage('CloudTrax',"Apply - Set buffer to: ".$this->GetBuffer($this->InstanceID.'networks'));
+			
+		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+		
+		
+		
+    }
+	
+	public function EnableSSID($SSID, $Enable) {
+		$key = $this->ReadPropertyString('key');
+		if(strlen($key)==0)
+			return false;
+		
+		$secret = $this->ReadPropertyString('secret');
+		if(strlen($secret)==0)
+			return false;
+		
+		$networkId = $this->ReadPropertyInteger('network');
+		if($networkId==0)
+			return false;
+			
+		$ctc = new CloudTraxCommunication($key, $secret);
+		$ctn = new CloudTrax($ctc, $networkId);
+		
+		return $ctn->EnableSSID($SSID, $Enable);
+			
+	}
+   
    public function GetConfigurationForm(){
 
 		$networksJSON = $this->GetBuffer($this->InstanceID.'networks');
@@ -78,41 +134,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		return $form;
    }
 
-    public function ApplyChanges(){
-        parent::ApplyChanges();
-
-		$key = $this->ReadPropertyString('key');
-		if(strlen($key)==0)
-			return;
-		
-		$secret = $this->ReadPropertyString('secret');
-		if(strlen($secret)==0)
-			return;
-		
-				
-		$ctc = new CloudTraxCommunication($key, $secret);
-		
-		if(strlen($this->GetBuffer($this->InstanceID.'networks'))==0) {
-			$ctns = new CloudTraxNetworks ($ctc);
-			$networks = $ctns->GetNetworks();
-			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));
-			
-		} 
-		
-		$selectedNetwork = $this->ReadPropertyString('network');
-		if($selectedNetwork>0 && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
-			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
-			$ssids = $ctn->GetSSIDs();
-			$this->SetBuffer($this->InstanceID.'ssids', json_encode($ssids, true));
-		}
-		
-		IPS_LogMessage('CloudTrax',"Apply - Set buffer to: ".$this->GetBuffer($this->InstanceID.'networks'));
-			
-		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
-		
-		
-		
-    }
+    
 	
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
 		switch ($Message) {
