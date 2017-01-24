@@ -72,7 +72,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		$ctc = new CloudTraxCommunication($key, $secret);
 		
 				
-		if(strlen($this->GetBuffer('networks')==0) {
+		if(strlen($this->GetBuffer('networks'))==0) {
 			$ctns = new CloudTraxNetworks ($ctc);
 			$networks = $ctns->GetNetworks();
 			$this->SetBuffer('networks', json_encode($networks, true));
