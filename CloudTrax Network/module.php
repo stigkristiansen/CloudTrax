@@ -52,9 +52,10 @@ class CloudTraxNetworkModule extends IPSModule {
 			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
 			$ssids = $ctn->GetSSIDs();
 			$this->SetBuffer($this->InstanceID.'ssids', json_encode($ssids, true));
-		}
+		} else
+			$this->SetBuffer($this->InstanceID.'ssids', '');
 		
-		IPS_LogMessage('CloudTrax',"Apply - Set buffer to: ".$this->GetBuffer($this->InstanceID.'networks'));
+		//IPS_LogMessage('CloudTrax',"Apply - Set buffer to: ".$this->GetBuffer($this->InstanceID.'networks'));
 			
 		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
 		
@@ -81,8 +82,28 @@ class CloudTraxNetworkModule extends IPSModule {
 		return $ctn->EnableSSID($SSID, $Enable);
 			
 	}
+	
+	public function SetBridgedWiredClients(string $SSID) {
+		$key = $this->ReadPropertyString('key');
+		if(strlen($key)==0)
+			return false;
+		
+		$secret = $this->ReadPropertyString('secret');
+		if(strlen($secret)==0)
+			return false;
+		
+		$networkId = $this->ReadPropertyInteger('network');
+		if($networkId==0)
+			return false;
+			
+		$ctc = new CloudTraxCommunication($key, $secret);
+		$ctn = new CloudTraxNetwork($ctc, $networkId);
+		
+		return $ctn->SetBridgedWiredClients($SSID);
+	
+	}
    
-   public function GetConfigurationForm(){
+	public function GetConfigurationForm(){
 
 		$networksJSON = $this->GetBuffer($this->InstanceID.'networks');
 	   
@@ -90,7 +111,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			$options = '{ "type": "Select", "name": "network", "caption": "Network",
 								"options": [';
 								
-			$option = '{ "label": "Select a network", "value": 0 },';
+			$option = '{ "label": "No network selected", "value": 0 },';
 			$options .= $option;
 			$networks = json_decode($networksJSON, true);
 			foreach($networks as $network) {
@@ -105,11 +126,10 @@ class CloudTraxNetworkModule extends IPSModule {
 		} else
 			$options = '{ "type": "Label", "label": "Register API Authentication information and press Apply!" },';
 						
-		IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer($this->InstanceID.'networks'));
+		//IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer($this->InstanceID.'networks'));
 	   
 		$ssidsJSON = $this->GetBuffer($this->InstanceID.'ssids') ;
-		
-		$ssidInfo = "";
+		$ssidInfo = '{ "type": "Label", "label": "Select network and press Apply!" },';
 		if(strlen($ssidsJSON) > 0){
 			$ssids = json_decode($ssidsJSON, true);
 			$ssidList = '';
