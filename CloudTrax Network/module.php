@@ -143,10 +143,11 @@ class CloudTraxNetworkModule extends IPSModule {
 		
 		$form = '{"elements":
 						[
-							{ "type": "Label", "label": "API Authentication" },
+							{ "type": "Label", "label": "API Authentication:" },
 							{ "name": "key", "type": "ValidationTextBox", "caption": "Key:" },
-							{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },'.$options.$ssidInfo.
-							'{ "type": "Label", "label": "Other settings" },
+							{ "name": "secret", "type": "ValidationTextBox", "caption": "Secret:" },
+							{ "type": "Label", "label": "Selected network:" },'.$options.$ssidInfo.
+							'{ "type": "Label", "label": "Other settings:" },
 							{ "type": "CheckBox", "name": "Log", "caption": "Enable logging:" }
 						],
 						}';
