@@ -52,7 +52,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
 			$ssids = $ctn->GetSSIDs();
 			$this->SetBuffer($this->InstanceID.'ssids', json_encode($ssids, true));
-		} else
+		} elseif($selectedNetwork==0)
 			$this->SetBuffer($this->InstanceID.'ssids', '');
 		
 		//IPS_LogMessage('CloudTrax',"Apply - Set buffer to: ".$this->GetBuffer($this->InstanceID.'networks'));
@@ -169,28 +169,7 @@ class CloudTraxNetworkModule extends IPSModule {
 				break;
 		}	
 	}
-		
-	private function Lock($Ident) {
-        $log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
-		for ($x=0;$x<200;$x++)
-        {
-            if (IPS_SemaphoreEnter("GH_".(string)$this->InstanceID.(string)$Ident, 1)){
-                return true;
-            }
-            else {
-  				if($x==0)
-					$log->LogMessage("Waiting for controller to unlock...");
-				IPS_Sleep(50);
-            }
-        }
-        return false;
-    }
 
-    private function Unlock($Ident) {
-        IPS_SemaphoreLeave("GH_".(string)$this->InstanceID.(string)$Ident);
-		$log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
-		$log->LogMessage("The controller is unlocked");
-    }
 		
 }
 
