@@ -129,7 +129,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		//IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer($this->InstanceID.'networks'));
 	   
 		$ssidsJSON = $this->GetBuffer($this->InstanceID.'ssids') ;
-		$ssidInfo = '{ "type": "Label", "label": "Select network and press Apply!" },';
+		$ssidInfo = '{ "type": "Label", "label": "Select network and press Apply to see available SSIDs!" },';
 		if(strlen($ssidsJSON) > 0){
 			$ssids = json_decode($ssidsJSON, true);
 			$ssidList = '';
