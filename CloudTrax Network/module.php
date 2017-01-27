@@ -83,6 +83,27 @@ class CloudTraxNetworkModule extends IPSModule {
 			
 	}
 	
+	public function EnableHidden(string $SSID, bool $Enable) {
+		$key = $this->ReadPropertyString('key');
+		if(strlen($key)==0)
+			return false;
+		
+		$secret = $this->ReadPropertyString('secret');
+		if(strlen($secret)==0)
+			return false;
+		
+		$networkId = $this->ReadPropertyInteger('network');
+		if($networkId==0)
+			return false;
+			
+		$ctc = new CloudTraxCommunication($key, $secret);
+		$ctn = new CloudTraxNetwork($ctc, $networkId);
+		
+		return $ctn->EnableHidden($SSID, $Enable);
+			
+	}
+
+
 	public function SetBridgedWiredClients(string $SSID) {
 		$key = $this->ReadPropertyString('key');
 		if(strlen($key)==0)

@@ -160,6 +160,32 @@ class CloudTraxNetwork {
 
 	}
 	
+	public function EnableHidden($SSID, $Enable) {
+		$ssid = $this->GetSSIDNumberByName($SSID);
+		
+		//echo "SSID number is: ".$ssid;
+		                                      	
+		if($ssid){
+			$data = array( 'ssids' => 
+				array( strval($ssid) => 
+	                array( 'general' => 
+	                    array( 'enable_hidden_network' => $Enable )
+	                )
+	            )
+	        );
+			
+			$result = json_decode($this->com->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
+			
+			if(array_key_exists('errors', $result))
+				return false;
+			else
+				return true;
+					
+		} else 
+			return false;
+
+	}
+	
 	public function SetBridgedWiredClients($SSID) {
 		
 		if($this->networkId) {
