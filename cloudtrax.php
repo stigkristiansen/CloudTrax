@@ -292,8 +292,7 @@ class CloudTraxNetworks {
 	
 	}
 			
-	// private functions
-	
+		
 	private function ListNetworks() {
 		$jsonResult = $this->com->CallApiServer(Method::GET, "/network/list", NULL);
 		$result = json_decode($jsonResult, true)['networks'];
