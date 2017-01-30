@@ -1,7 +1,8 @@
 <?
 
-require_once(__DIR__ . "/../logging.php");
 require_once(__DIR__ . "/../cloudtrax.php");
+require_once(__DIR__ . "/../logging.php");
+
 
 define('IPS_BASE', 10000);   
 define('IPS_KERNELMESSAGE', IPS_BASE + 100);           //Kernel Message
