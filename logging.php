@@ -1,6 +1,6 @@
 <?
 
-class Logging {
+class CTLogging {
   private $logEnabled;
   private $sender;
 
