@@ -28,7 +28,7 @@ class CloudTraxCommunication {
 		
 	}
 	
-	public function ConfigureLogging($Log, $InstanceName)){
+	public function ConfigureLogging($Log, $InstanceName){
 		$this->log = $Log;
 		$this->instanceName = $InstanceName;
 	}
