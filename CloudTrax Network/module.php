@@ -45,8 +45,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			$ctns = new CloudTraxNetworks ($ctc);
 			$ctns->Refresh();
 			$networks = $ctns->GetNetworks();
-			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));
-			
+			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));	
 		} 
 		
 		$selectedNetwork = $this->ReadPropertyString('network');
@@ -79,10 +78,11 @@ class CloudTraxNetworkModule extends IPSModule {
 		if($networkId==0)
 			return false;
 			
-		$ssids = $this->GetBuffer($this->InstanceID.'ssids');
 		$ctc = new CloudTraxCommunication($key, $secret);
 		$ctc->ConfigureLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		$ctn = new CloudTraxNetwork($ctc, $networkId);
+		
+		$ssids = $this->GetBuffer($this->InstanceID.'ssids');
 		if(strlen($ssids)>0)
 			$ctn->SetSSIDs(json_decode(ssids, true));
 		else
@@ -104,11 +104,12 @@ class CloudTraxNetworkModule extends IPSModule {
 		$networkId = $this->ReadPropertyInteger('network');
 		if($networkId==0)
 			return false;
-			
-		$ssids = $this->GetBuffer($this->InstanceID.'ssids');
+				
 		$ctc = new CloudTraxCommunication($key, $secret);
 		$ctc->ConfigureLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		$ctn = new CloudTraxNetwork($ctc, $networkId);
+		
+		$ssids = $this->GetBuffer($this->InstanceID.'ssids');
 		if(strlen($ssids)>0)
 			$ctn->SetSSIDs(json_decode($ssids, true));
 		else
@@ -135,6 +136,12 @@ class CloudTraxNetworkModule extends IPSModule {
 		$ctc = new CloudTraxCommunication($key, $secret);
 		$ctc->ConfigureLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		$ctn = new CloudTraxNetwork($ctc, $networkId);
+		
+		$ssids = $this->GetBuffer($this->InstanceID.'ssids');
+		if(strlen($ssids)>0)
+			$ctn->SetSSIDs(json_decode($ssids, true));
+		else
+			$ctn->Refresh();
 		
 		return $ctn->SetBridgedWiredClients($SSID);
 	
