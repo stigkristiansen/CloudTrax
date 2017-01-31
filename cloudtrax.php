@@ -30,10 +30,10 @@ class CloudTraxCommunication {
 	    
 	    $time = time();
 	    $nonce = rand();
-	    if ($method == Method::POST)
-	        assert( '$data != NULL /* @@@@ POST requires $data @@@@ */');
-	    elseif ($method == Method::GET || $method == Method::DELETE)
-	        assert( '$data == NULL /* @@@ GET and DELETE take no $data @@@ */');
+	    if ($method == Method::POST  && $data==NULL)
+	        throw new Exception('POST requires $data');
+	    elseif (($method == Method::GET || $method == Method::DELETE) && $data!=NULL) 
+	        throw new Exeption('GET and DELETE do not use $data');
 	        
 	    $path = $endpoint;
 	        
@@ -87,7 +87,7 @@ class CloudTraxCommunication {
 			
 			if ($result == FALSE) {
 	            if (curl_errno($ch) == 0)
-	                echo "@@@@ NOTE @@@@: nil HTTP return: This API call appears to be broken" . "\n";
+	                throw new Exeption('This API call appears to be broken' . '\n');
 	            else
 	                throw new Exception(curl_error($ch), curl_errno($ch));    
 	        }
@@ -95,8 +95,7 @@ class CloudTraxCommunication {
 	            return $result;
 	    } 
 	    catch(Exception $e) {
-	        trigger_error( sprintf('Curl failed with error #%d: "%s"',
-	            $e->getCode(), $e->getMessage()), E_USER_ERROR);
+	        throw new Exeption(sprintf('Curl failed with error #%d: "%s"', $e->getCode(), $e->getMessage()));
 	    }
 	
 	}
@@ -132,6 +131,7 @@ class CloudTraxNetwork {
 	public function EnableSSID($SSID, $Enable) {
 		$ssid = $this->GetSSIDNumberByName($SSID);
 		
+		$log = new CTLogging();
 		//echo "SSID number is: ".$ssid;
 		                                      	
 		if($ssid){
@@ -142,22 +142,36 @@ class CloudTraxNetwork {
 	                )
 	            )
 	        );
-			
-			$result = json_decode($this->com->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
-			
-			if(array_key_exists('errors', $result))
+						
+			try {
+				$result = json_decode($this->com->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
+			} catch (Exeption $e) {
+				$log->LogMessageError($e->errorMessage);
 				return false;
-			else
+			}
+			
+			if(array_key_exists('errors', $result)) {
+				$errorMessage = '';
+				foreach($result['errors'] as $error) {
+						$errorMessage.=strlen($errorMessage)==0?$error['message']:', '.$error['message'];
+				}
+				$log->LogMessage($errorMessage);
+				return false;
+			 } else
 				return true;
 					
-		} else 
+		} else {
+			$log->LogMessage('Invalid SSID spesified: '.$SSID);
 			return false;
+		}
+			
 
 	}
 	
 	public function EnableHidden($SSID, $Enable) {
 		$ssid = $this->GetSSIDNumberByName($SSID);
 		
+		$log = new CTLogging();
 		//echo "SSID number is: ".$ssid;
 		                                      	
 		if($ssid){
@@ -169,43 +183,64 @@ class CloudTraxNetwork {
 	            )
 	        );
 			
-			$result = json_decode($this->com->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
-			
-			if(array_key_exists('errors', $result))
+			try{
+				$result = json_decode($this->com->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
+			} catch(Exeption $e) {
+				$log->LogMessageError($e->errorMessage);
 				return false;
-			else
+			}
+			
+			if(array_key_exists('errors', $result)) {
+				$errorMessage = '';
+				foreach($result['errors'] as $error) {
+					$errorMessage.=strlen($errorMessage)==0?$error['message']:', '.$error['message'];
+				}
+				$log->LogMessage($errorMessage);
+				return false;
+			} else
 				return true;
 					
-		} else 
+		} else {
+			$log->LogMessage('Invalid SSID spesified: '.$SSID);
 			return false;
+		}
 
 	}
 	
 	public function SetBridgedWiredClients($SSID) {
-		
-		if($this->networkId) {
-		
-			$id = $this->GetSSIDNumberByName($SSID);
-			                                      	
-			if($id){
-				$data = array('network' => 
-							array('advanced' => 
-								array('wired_bridge_ssid' => $id)
-							)
-				);
-			
-				$result = json_decode($this->com->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
+		$log = new CTLogging();
 				
-				if(array_key_exists('errors', $result))
-					return false;
-				else
-					return true;
-						
-			} else 
+		$id = $this->GetSSIDNumberByName($SSID);
+												
+		if($id){
+			$data = array('network' => 
+						array('advanced' => 
+							array('wired_bridge_ssid' => $id)
+						)
+			);
+			
+			try{
+				$result = json_decode($this->com->CallApiServer(Method::PUT, "/network/".strval($this->networkId)."/settings", $data),true);
+			} catch (Exeption $e) {
+				$log->LogMessageError($e->errorMessage);
 				return false;
-		} else
+			}
+			
+			if(array_key_exists('errors', $result)) {
+				$errorMessage = '';
+				foreach($result['errors'] as $error) {
+					$errorMessage.=strlen($errorMessage)==0?$error['message']:', '.$error['message'];
+				}
+				$log->LogMessage($errorMessage);
+				return false;
+			}else
+				return true;
+					
+		} else {
+			$log->LogMessage('Invalid SSID spesified: '.$SSID);
 			return false;
-
+		}
+		
 	}
 
 	
