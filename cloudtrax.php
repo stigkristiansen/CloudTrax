@@ -126,7 +126,7 @@ class CloudTraxNetwork {
 		
 	
 	public function Refresh() {
-		$this->ssids = ListSSIDs($this->networkId);
+		$this->ssids = $this->ListSSIDs($this->networkId);
 	}
 	
 	public function EnableSSID($SSID, $Enable) {
