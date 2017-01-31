@@ -38,7 +38,7 @@ class CloudTraxCommunication {
 	}
 	
 	public function InstanceName() {
-		return $this->instancename;
+		return $this->instanceName;
 	}
 	
 	public function CallApiServer($method, $endpoint, $data) {
