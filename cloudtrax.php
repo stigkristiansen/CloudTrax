@@ -218,6 +218,9 @@ class CloudTraxNetwork {
 		
 		$Name = strtolower($Name);
 		
+		if(!$this->ssids)
+			return false;
+		
 		foreach($this->ssids as $ssid) {
 			if($ssid['name']==$Name) {
 				$found = true;
