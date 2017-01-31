@@ -43,6 +43,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		
 		if(strlen($this->GetBuffer($this->InstanceID.'networks'))==0) {
 			$ctns = new CloudTraxNetworks ($ctc);
+			$ctns->Refresh();
 			$networks = $ctns->GetNetworks();
 			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));
 			
@@ -51,6 +52,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		$selectedNetwork = $this->ReadPropertyString('network');
 		if($selectedNetwork>0 && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
 			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
+			$ctn->Refresh();
 			$ssids = $ctn->GetSSIDs();
 			$this->SetBuffer($this->InstanceID.'ssids', json_encode($ssids, true));
 		} elseif($selectedNetwork==0)
@@ -77,9 +79,14 @@ class CloudTraxNetworkModule extends IPSModule {
 		if($networkId==0)
 			return false;
 			
+		$ssids = $this->GetBuffer($this->InstanceID.'ssids');
 		$ctc = new CloudTraxCommunication($key, $secret);
 		$ctn = new CloudTraxNetwork($ctc, $networkId);
-		
+		if(strlen($ssids)>0)
+			$ctn->SetSSIDs(json_decode(ssids, true));
+		else
+			$ctn->Refresh();
+				
 		return $ctn->EnableSSID($SSID, $Enable);
 			
 	}
@@ -97,8 +104,13 @@ class CloudTraxNetworkModule extends IPSModule {
 		if($networkId==0)
 			return false;
 			
+		$ssids = $this->GetBuffer($this->InstanceID.'ssids');
 		$ctc = new CloudTraxCommunication($key, $secret);
 		$ctn = new CloudTraxNetwork($ctc, $networkId);
+		if(strlen($ssids)>0)
+			$ctn->SetSSIDs(json_decode(ssids, true));
+		else
+			$ctn->Refresh();
 		
 		return $ctn->EnableHidden($SSID, $Enable);
 			

@@ -113,7 +113,7 @@ class CloudTraxNetwork {
 				
 		$this->networkId = $NetworkId;
 		$this->com = $Com;
-		$this->ssids = $this->ListSSIDs();
+		//$this->ssids = $this->ListSSIDs();
 	}
 	
 	public function GetSSIDs() {
@@ -123,12 +123,7 @@ class CloudTraxNetwork {
 	public function SetSSIDs($SSIDs) {
 		$this->ssids = $SSIDs;
 	}
-	
 		
-	public function GetNetworkJson() {
-		$network = array('networkid' => $this->networkId, 'ssids' => $this->ssids);
-		return json_encode($network);
-	}
 	
 	public function Refresh() {
 		$this->ssids = ListSSIDs($this->networkId);
@@ -260,10 +255,10 @@ class CloudTraxNetworks {
 	public function __construct($Com) {
 		
 		$this->com = $Com;
-		$this->networks = $this->ListNetworks();
+		//$this->networks = $this->ListNetworks();
 	}
 	
-	public function RefreshData() {
+	public function Refresh() {
 		$this->networks = $this->ListNetworks();
 			
 	}
