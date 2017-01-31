@@ -19,10 +19,26 @@ class Method {
 class CloudTraxCommunication {
 	private $key;
 	private $secret;
+	private $log=false;
+	private $instanceName='';
 	
 	public function __construct($Key, $Secret) {
 		$this->key = $Key;
 		$this->secret = $Secret;
+		
+	}
+	
+	public function ConfigureLogging($Log, $InstanceName)){
+		$this->log = $Log;
+		$this->instanceName = $InstanceName;
+	}
+	
+	public function Log() {
+		return $this->log;
+	}
+	
+	public function InstanceName() {
+		return $this->instancename;
 	}
 	
 	public function CallApiServer($method, $endpoint, $data) {
@@ -131,7 +147,7 @@ class CloudTraxNetwork {
 	public function EnableSSID($SSID, $Enable) {
 		$ssid = $this->GetSSIDNumberByName($SSID);
 		
-		$log = new CTLogging();
+		$log = new CTLogging($this->com->Log(), $this->com->InstanceName());
 		//echo "SSID number is: ".$ssid;
 		                                      	
 		if($ssid){
@@ -169,9 +185,9 @@ class CloudTraxNetwork {
 	}
 	
 	public function EnableHidden($SSID, $Enable) {
-		$ssid = $this->GetSSIDNumberByName($SSID);
+		$log = new CTLogging($this->com->Log(), $this->com->InstanceName());
 		
-		$log = new CTLogging();
+		$ssid = $this->GetSSIDNumberByName($SSID);
 		//echo "SSID number is: ".$ssid;
 		                                      	
 		if($ssid){
@@ -208,7 +224,7 @@ class CloudTraxNetwork {
 	}
 	
 	public function SetBridgedWiredClients($SSID) {
-		$log = new CTLogging();
+		$log = new CTLogging($this->com->Log(), $this->com->InstanceName());
 				
 		$id = $this->GetSSIDNumberByName($SSID);
 												
