@@ -238,7 +238,11 @@ class CloudTraxNetwork {
 	private function ListSSIDs() {
 		$jsonResult = $this->com->CallApiServer(Method::GET, "/network/".$this->networkId."/settings", NULL);
 		
+		//array_key_exists
 		$ids = json_decode($jsonResult, true)['ssids'];
+		
+		if(!$ids)
+			return null;
 		
 		foreach($ids as $row) {
 			$name = strtolower($row['general']['ssid_name']);
