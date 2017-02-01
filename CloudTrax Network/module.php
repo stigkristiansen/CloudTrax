@@ -30,6 +30,8 @@ class CloudTraxNetworkModule extends IPSModule {
    public function ApplyChanges(){
         parent::ApplyChanges();
 
+		$log = new CTLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		
 		$key = $this->ReadPropertyString('key');
 		if(strlen($key)==0)
 			return;
@@ -37,30 +39,42 @@ class CloudTraxNetworkModule extends IPSModule {
 		$secret = $this->ReadPropertyString('secret');
 		if(strlen($secret)==0)
 			return;
+
+		$log->LogMessage('Read Key and Secret');
 		
-				
 		$ctc = new CloudTraxCommunication($key, $secret);
 		$ctc->ConfigureLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
-		
+
 		if(strlen($this->GetBuffer($this->InstanceID.'networks'))==0) {
 			$ctns = new CloudTraxNetworks ($ctc);
 			$ctns->Refresh();
 			$networks = $ctns->GetNetworks();
+			if($networks)
+				$log->LogMessage('Retrieved all networks: '. print_r($networks, true));
+			else
+				$log->LogMessage('Unable to retrieve networks');
+			
 			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));	
-		} 
+		} else
+			$log->LogMessage('Available networks are already retrieved');
 		
 		$selectedNetwork = $this->ReadPropertyString('network');
 		if($selectedNetwork>0 && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
 			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
 			$ctn->Refresh();
 			$ssids = $ctn->GetSSIDs();
+			if($ssids)
+				$log->LogMessage('Retrieved all ssids: '. print_r($ssids, true));
+			else
+				$log->LogMessage('Unable to retrieve ssids');
+			
 			$this->SetBuffer($this->InstanceID.'ssids', json_encode($ssids, true));
 		} elseif($selectedNetwork==0)
 			$this->SetBuffer($this->InstanceID.'ssids', '');
-		
-		//IPS_LogMessage('CloudTrax',"Apply - Set buffer to: ".$this->GetBuffer($this->InstanceID.'networks'));
-			
-		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+		elseif(strlen($this->GetBuffer($this->InstanceID.'ssids'))>0)
+			$log->LogMessage('Available ssids are already retrieved');
+					
+		//$this->RegisterMessage(0, IPS_KERNELMESSAGE);
 		
     }
 	

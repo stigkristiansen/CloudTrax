@@ -124,10 +124,9 @@ class CloudTraxNetwork {
 	private $com;
 	
 	public function __construct($Com, $NetworkId) {
-				
 		$this->networkId = $NetworkId;
 		$this->com = $Com;
-		//$this->ssids = $this->ListSSIDs();
+		
 	}
 	
 	public function GetSSIDs() {
@@ -278,7 +277,7 @@ class CloudTraxNetwork {
 		if($found)
 			return $num;
 		else 
-			return false;
+			return 0;
 	
 	}
 
@@ -324,9 +323,8 @@ class CloudTraxNetworks {
 	private $com;
 	
 	public function __construct($Com) {
-		
 		$this->com = $Com;
-		//$this->networks = $this->ListNetworks();
+	
 	}
 	
 	public function Refresh() {
@@ -335,10 +333,8 @@ class CloudTraxNetworks {
 	}
 	
 	public function GetNetworks() {
-		if($this->networks)
-			return $this->networks;
-		else
-			return false;
+		return $this->networks;
+		
 	}
 	
 	public function GetNetworkIdByName($Network) {
@@ -354,7 +350,7 @@ class CloudTraxNetworks {
 		if($found)
 			return $id;
 		else 
-			return false;
+			return 0;
 	
 	}
 			
