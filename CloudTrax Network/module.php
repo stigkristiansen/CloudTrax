@@ -40,6 +40,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		
 				
 		$ctc = new CloudTraxCommunication($key, $secret);
+		$ctc->ConfigureLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		
 		if(strlen($this->GetBuffer($this->InstanceID.'networks'))==0) {
 			$ctns = new CloudTraxNetworks ($ctc);
