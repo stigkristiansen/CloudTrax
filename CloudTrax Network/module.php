@@ -62,8 +62,6 @@ class CloudTraxNetworkModule extends IPSModule {
 			
 		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
 		
-		
-		
     }
 	
 	public function EnableSSID(string $SSID, bool $Enable) {

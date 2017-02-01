@@ -109,8 +109,7 @@ class CloudTraxCommunication {
 	        }
 	        else
 	            return $result;
-	    } 
-	    catch(Exception $e) {
+	    } catch(Exception $e) {
 	        throw new Exeption(sprintf('Curl failed with error #%d: "%s"', $e->getCode(), $e->getMessage()));
 	    }
 	
@@ -139,9 +138,8 @@ class CloudTraxNetwork {
 		$this->ssids = $SSIDs;
 	}
 		
-	
 	public function Refresh() {
-		$this->ssids = $this->ListSSIDs($this->networkId);
+		$this->ssids = $this->ListSSIDs();
 	}
 	
 	public function EnableSSID($SSID, $Enable) {
@@ -171,13 +169,13 @@ class CloudTraxNetwork {
 				foreach($result['errors'] as $error) {
 						$errorMessage.=strlen($errorMessage)==0?$error['message']:', '.$error['message'];
 				}
-				$log->LogMessage($errorMessage);
+				$log->LogMessageError($errorMessage);
 				return false;
 			 } else
 				return true;
 					
 		} else {
-			$log->LogMessage('Invalid SSID spesified: '.$SSID);
+			$log->LogMessageError('Invalid SSID spesified: '.$SSID);
 			return false;
 		}
 			
@@ -211,13 +209,13 @@ class CloudTraxNetwork {
 				foreach($result['errors'] as $error) {
 					$errorMessage.=strlen($errorMessage)==0?$error['message']:', '.$error['message'];
 				}
-				$log->LogMessage($errorMessage);
+				$log->LogMessageError($errorMessage);
 				return false;
 			} else
 				return true;
 					
 		} else {
-			$log->LogMessage('Invalid SSID spesified: '.$SSID);
+			$log->LogMessageError('Invalid SSID spesified: '.$SSID);
 			return false;
 		}
 
@@ -247,20 +245,18 @@ class CloudTraxNetwork {
 				foreach($result['errors'] as $error) {
 					$errorMessage.=strlen($errorMessage)==0?$error['message']:', '.$error['message'];
 				}
-				$log->LogMessage($errorMessage);
+				$log->LogMessageError($errorMessage);
 				return false;
 			}else
 				return true;
 					
 		} else {
-			$log->LogMessage('Invalid SSID spesified: '.$SSID);
+			$log->LogMessageError('Invalid SSID spesified: '.$SSID);
 			return false;
 		}
 		
 	}
 
-	
-	
 	
 	// private functions
 	
@@ -287,14 +283,31 @@ class CloudTraxNetwork {
 	}
 
 	private function ListSSIDs() {
-		$jsonResult = $this->com->CallApiServer(Method::GET, "/network/".$this->networkId."/settings", NULL);
+		$log = new CTLogging($this->com->Log(), $this->com->InstanceName());
 		
-		//array_key_exists
-		$ids = json_decode($jsonResult, true)['ssids'];
+		try {
+			$result = json_decode($this->com->CallApiServer(Method::GET, "/network/".$this->networkId."/settings", NULL),true);
+		} catch (Exeption $e) {
+			$log->LogMessageError($e->errorMessage);
+			return NULL;
+		}
 		
-		if(!$ids)
-			return null;
+		if(array_key_exists('errors', $result)) {
+			$errorMessage = '';
+			foreach($result['errors'] as $error) {
+				$errorMessage.=strlen($errorMessage)==0?$error['message']:', '.$error['message'];
+			}
+			$log->LogMessageError($errorMessage);
+			return NULL;
+		}
 		
+		if(array_key_exists('ssids', $result)
+			$ids = $result['ssids'];
+		else {
+			$log->LogMessageError('Missing SSIDSs in the response data!');
+			return NULL;
+		}
+				
 		foreach($ids as $row) {
 			$name = strtolower($row['general']['ssid_name']);
 			$id =   $row['general']['ssid_num'];
@@ -345,12 +358,24 @@ class CloudTraxNetworks {
 	
 	}
 			
-		
 	private function ListNetworks() {
-		$jsonResult = $this->com->CallApiServer(Method::GET, "/network/list", NULL);
-		$result = json_decode($jsonResult, true)['networks'];
+		$log = new CTLogging($this->com->Log(), $this->com->InstanceName());
 		
-		foreach($result as $row) {
+		try{
+			$result = json_decode($this->com->CallApiServer(Method::GET, "/network/list", NULL), true);
+		} catch (Exeption $e) {
+			$log->LogMessageError($e->errorMessage);
+			return NULL;
+		}
+		
+		if(array_key_exists('networks', $result)
+			$networks = $result['networks'];
+		else {
+			$log->LogMessageError('Missing networks in the response data!');
+			return NULL;
+		}
+		
+		foreach($networks as $row) {
 			$name = $row['name'];
 			$id =   $row['id'];
 			$returnValue[] = Array('name' => $name, 'id' => $id );
