@@ -301,7 +301,7 @@ class CloudTraxNetwork {
 			return NULL;
 		}
 		
-		if(array_key_exists('ssids', $result)
+		if(array_key_exists('ssids', $result))
 			$ids = $result['ssids'];
 		else {
 			$log->LogMessageError('Missing SSIDSs in the response data!');
@@ -368,7 +368,7 @@ class CloudTraxNetworks {
 			return NULL;
 		}
 		
-		if(array_key_exists('networks', $result)
+		if(array_key_exists('networks', $result))
 			$networks = $result['networks'];
 		else {
 			$log->LogMessageError('Missing networks in the response data!');
