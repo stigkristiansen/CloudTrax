@@ -223,13 +223,15 @@ class CloudTraxNetworkModule extends IPSModule {
 
 			$options .= '					]
 							},';
+			$ssidInfo = '{ "type": "Label", "label": "Select network and press Apply to see available SSIDs!" },';
 		} else {
 			$log->LogMessage('There is no network(s) retrieved from CloudTrax');
 			$options = '{ "type": "Label", "label": "Register API Authentication information and press Apply!" },';
+			$ssidInfo = '{ "type": "Label", "label": "" },';
 		}		
 			   
 		$ssidsJSON = $this->GetBuffer($this->InstanceID.'ssids') ;
-		$ssidInfo = '{ "type": "Label", "label": "Select network and press Apply to see available SSIDs!" },';
+		//$ssidInfo = '{ "type": "Label", "label": "Select network and press Apply to see available SSIDs!" },';
 		if(strlen($ssidsJSON) > 0){
 			$log->LogMessage('Creating list of available SSIDs');
 			$ssids = json_decode($ssidsJSON, true);
