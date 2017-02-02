@@ -79,18 +79,22 @@ class CloudTraxNetworkModule extends IPSModule {
     }
 	
 	public function EnableSSID(string $SSID, bool $Enable) {
+		$log = new CTLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		
 		$key = $this->ReadPropertyString('key');
-		if(strlen($key)==0)
-			return false;
-		
 		$secret = $this->ReadPropertyString('secret');
-		if(strlen($secret)==0)
-			return false;
 		
-		$networkId = $this->ReadPropertyInteger('network');
-		if($networkId==0)
+		if(strlen($key)==0) || strlen($secret)==0) {
+			$log->LogMessage('Misisng Key or Secret. Aborting EnableSSID()')
 			return false;
-			
+		}
+				
+		$networkId = $this->ReadPropertyInteger('network');
+		if($networkId==0) {
+			$log->LogMessage('The network is not selected. Aborting EnableSSID()')
+			return false;
+		}
+					
 		$ctc = new CloudTraxCommunication($key, $secret);
 		$ctc->ConfigureLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		$ctn = new CloudTraxNetwork($ctc, $networkId);
@@ -100,24 +104,36 @@ class CloudTraxNetworkModule extends IPSModule {
 			$ctn->SetSSIDs(json_decode(ssids, true));
 		else
 			$ctn->Refresh();
-				
-		return $ctn->EnableSSID($SSID, $Enable);
+		
+		
+		$result = $ctn->EnableSSID($SSID, $Enable);
+		if($result) {
+			$log->LogMessage('EnableSSID() succeeded');
+			return true;
+		} else {
+			$log->LogMessage('EnableSSID() failed');
+			return false;
+		}
 			
 	}
 	
 	public function EnableHidden(string $SSID, bool $Enable) {
+		$log = new CTLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		
 		$key = $this->ReadPropertyString('key');
-		if(strlen($key)==0)
-			return false;
-		
 		$secret = $this->ReadPropertyString('secret');
-		if(strlen($secret)==0)
-			return false;
 		
-		$networkId = $this->ReadPropertyInteger('network');
-		if($networkId==0)
+		if(strlen($key)==0) || strlen($secret)==0) {
+			$log->LogMessage('Misisng Key or Secret. Aborting EnableHidden()')
 			return false;
+		}
 				
+		$networkId = $this->ReadPropertyInteger('network');
+		if($networkId==0) {
+			$log->LogMessage('The network is not selected. Aborting EnableHidden()')
+			return false;
+		}
+		
 		$ctc = new CloudTraxCommunication($key, $secret);
 		$ctc->ConfigureLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		$ctn = new CloudTraxNetwork($ctc, $networkId);
@@ -128,23 +144,33 @@ class CloudTraxNetworkModule extends IPSModule {
 		else
 			$ctn->Refresh();
 		
-		return $ctn->EnableHidden($SSID, $Enable);
-			
+		$result = $ctn->EnableHidden($SSID, $Enable);
+		if($result) {
+			$log->LogMessage('EnableHidden() succeeded');
+			return true;
+		} else {
+			$log->LogMessage('EnableHidden() failed');
+			return false;
+		}	
+	
 	}
 
-
 	public function SetBridgedWiredClients(string $SSID) {
+		$log = new CTLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		
 		$key = $this->ReadPropertyString('key');
-		if(strlen($key)==0)
-			return false;
-		
 		$secret = $this->ReadPropertyString('secret');
-		if(strlen($secret)==0)
-			return false;
 		
-		$networkId = $this->ReadPropertyInteger('network');
-		if($networkId==0)
+		if(strlen($key)==0) || strlen($secret)==0) {
+			$log->LogMessage('Misisng Key or Secret. Aborting SetBridgedWiredClients()')
 			return false;
+		}
+				
+		$networkId = $this->ReadPropertyInteger('network');
+		if($networkId==0) {
+			$log->LogMessage('The network is not selected. Aborting SetBridgedWiredClients()')
+			return false;
+		}
 			
 		$ctc = new CloudTraxCommunication($key, $secret);
 		$ctc->ConfigureLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
@@ -156,15 +182,26 @@ class CloudTraxNetworkModule extends IPSModule {
 		else
 			$ctn->Refresh();
 		
-		return $ctn->SetBridgedWiredClients($SSID);
+		$result = $ctn->SetBridgedWiredClients($SSID);
+		if($result) {
+			$log->LogMessage('SetBridgedWiredClients() succeeded');
+			return true;
+		} else {
+			$log->LogMessage('SetBridgedWiredClients() failed');
+			return false;
+		}
 	
 	}
    
 	public function GetConfigurationForm(){
-
+		$log = new CTLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		
+		$log->LogMessage('Generating configuration form');
+		
 		$networksJSON = $this->GetBuffer($this->InstanceID.'networks');
 	   
 		if(strlen($networksJSON) > 0){
+			$log->LogMessage('Creating drop down box for available networks');
 			$options = '{ "type": "Select", "name": "network", "caption": "Network",
 								"options": [';
 								
@@ -180,14 +217,16 @@ class CloudTraxNetworkModule extends IPSModule {
 
 			$options .= '					]
 							},';
-		} else
+		} else {
+			$log->LogMessage('There is no network(s) retrieved from CloudTrax');
 			$options = '{ "type": "Label", "label": "Register API Authentication information and press Apply!" },';
-						
+		}		
 		//IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer($this->InstanceID.'networks'));
 	   
 		$ssidsJSON = $this->GetBuffer($this->InstanceID.'ssids') ;
 		$ssidInfo = '{ "type": "Label", "label": "Select network and press Apply to see available SSIDs!" },';
 		if(strlen($ssidsJSON) > 0){
+			$log->LogMessage('Creating list for available SSIDs');
 			$ssids = json_decode($ssidsJSON, true);
 			$ssidList = '';
 			foreach($ssids as $ssid) {
@@ -196,7 +235,8 @@ class CloudTraxNetworkModule extends IPSModule {
 			}
 				
 			$ssidInfo = '{ "type": "Label", "label": "Available SSIDs: '.$ssidList.'" },';
-		}
+		} else
+			$log->LogMessage('There is no SSIDs retrieved from CloudTrax');
 		
 		$form = '{"elements":
 						[
