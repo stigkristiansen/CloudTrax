@@ -189,6 +189,13 @@ class CloudTraxNetworkModule extends IPSModule {
 		}
 	
 	}
+	
+	public RefreshCloudTrax() {
+			$this->SetBuffer($this->InstanceID.'ssids','');
+			$this->SetBuffer($this->InstanceID.'networks','');
+			$this->ApplyChanges();
+			
+	}
    
 	public function GetConfigurationForm(){
 		$log = new CTLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
