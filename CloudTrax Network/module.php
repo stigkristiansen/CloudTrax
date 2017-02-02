@@ -190,7 +190,7 @@ class CloudTraxNetworkModule extends IPSModule {
 	
 	}
 	
-	public RefreshCloudTrax() {
+	public function RefreshCloudTrax() {
 			$this->SetBuffer($this->InstanceID.'ssids','');
 			$this->SetBuffer($this->InstanceID.'networks','');
 			$this->ApplyChanges();
