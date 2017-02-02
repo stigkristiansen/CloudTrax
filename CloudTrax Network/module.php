@@ -84,7 +84,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		$key = $this->ReadPropertyString('key');
 		$secret = $this->ReadPropertyString('secret');
 		
-		if(strlen($key)==0) || strlen($secret)==0) {
+		if(strlen($key)==0 || strlen($secret)==0) {
 			$log->LogMessage('Misisng Key or Secret. Aborting EnableSSID()')
 			return false;
 		}
@@ -123,7 +123,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		$key = $this->ReadPropertyString('key');
 		$secret = $this->ReadPropertyString('secret');
 		
-		if(strlen($key)==0) || strlen($secret)==0) {
+		if(strlen($key)==0 || strlen($secret)==0) {
 			$log->LogMessage('Misisng Key or Secret. Aborting EnableHidden()')
 			return false;
 		}
@@ -161,7 +161,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		$key = $this->ReadPropertyString('key');
 		$secret = $this->ReadPropertyString('secret');
 		
-		if(strlen($key)==0) || strlen($secret)==0) {
+		if(strlen($key)==0 || strlen($secret)==0) {
 			$log->LogMessage('Misisng Key or Secret. Aborting SetBridgedWiredClients()')
 			return false;
 		}
