@@ -238,7 +238,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			}
 				
 			$ssidInfo = '{ "type": "Label", "label": "Available SSIDs: '.$ssidList.'" }, 
-						 {"type": "Button", "label": "Refresh", "onClick": "CTN_RefreshCloudTrax();"},';
+						 {"type": "Button", "label": "Refresh", "onClick": "CTN_RefreshCloudTrax($id);"},';
 		} else
 			$log->LogMessage('There is no SSIDs retrieved from CloudTrax');
 		
