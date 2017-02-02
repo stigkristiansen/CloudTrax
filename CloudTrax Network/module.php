@@ -226,7 +226,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		$ssidsJSON = $this->GetBuffer($this->InstanceID.'ssids') ;
 		$ssidInfo = '{ "type": "Label", "label": "Select network and press Apply to see available SSIDs!" },';
 		if(strlen($ssidsJSON) > 0){
-			$log->LogMessage('Creating list for available SSIDs');
+			$log->LogMessage('Creating list of available SSIDs');
 			$ssids = json_decode($ssidsJSON, true);
 			$ssidList = '';
 			foreach($ssids as $ssid) {
