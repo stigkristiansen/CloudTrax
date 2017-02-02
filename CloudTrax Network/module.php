@@ -85,13 +85,13 @@ class CloudTraxNetworkModule extends IPSModule {
 		$secret = $this->ReadPropertyString('secret');
 		
 		if(strlen($key)==0 || strlen($secret)==0) {
-			$log->LogMessage('Misisng Key or Secret. Aborting EnableSSID()')
+			$log->LogMessage('Misisng Key or Secret. Aborting EnableSSID()');
 			return false;
 		}
 				
 		$networkId = $this->ReadPropertyInteger('network');
 		if($networkId==0) {
-			$log->LogMessage('The network is not selected. Aborting EnableSSID()')
+			$log->LogMessage('The network is not selected. Aborting EnableSSID()');
 			return false;
 		}
 					
@@ -124,13 +124,13 @@ class CloudTraxNetworkModule extends IPSModule {
 		$secret = $this->ReadPropertyString('secret');
 		
 		if(strlen($key)==0 || strlen($secret)==0) {
-			$log->LogMessage('Misisng Key or Secret. Aborting EnableHidden()')
+			$log->LogMessage('Misisng Key or Secret. Aborting EnableHidden()');
 			return false;
 		}
 				
 		$networkId = $this->ReadPropertyInteger('network');
 		if($networkId==0) {
-			$log->LogMessage('The network is not selected. Aborting EnableHidden()')
+			$log->LogMessage('The network is not selected. Aborting EnableHidden()');
 			return false;
 		}
 		
@@ -162,13 +162,13 @@ class CloudTraxNetworkModule extends IPSModule {
 		$secret = $this->ReadPropertyString('secret');
 		
 		if(strlen($key)==0 || strlen($secret)==0) {
-			$log->LogMessage('Misisng Key or Secret. Aborting SetBridgedWiredClients()')
+			$log->LogMessage('Misisng Key or Secret. Aborting SetBridgedWiredClients()');
 			return false;
 		}
 				
 		$networkId = $this->ReadPropertyInteger('network');
 		if($networkId==0) {
-			$log->LogMessage('The network is not selected. Aborting SetBridgedWiredClients()')
+			$log->LogMessage('The network is not selected. Aborting SetBridgedWiredClients()');
 			return false;
 		}
 			
