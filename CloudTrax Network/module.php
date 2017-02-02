@@ -195,6 +195,8 @@ class CloudTraxNetworkModule extends IPSModule {
 			$this->SetBuffer($this->InstanceID.'networks','');
 			$this->ApplyChanges();
 			
+			return "Please reload the configuration form to show updated information!";
+			
 	}
    
 	public function GetConfigurationForm(){
@@ -238,7 +240,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			}
 				
 			$ssidInfo = '{ "type": "Label", "label": "Available SSIDs: '.$ssidList.'" }, 
-						 {"type": "Button", "label": "Refresh", "onClick": "CTN_RefreshCloudTrax($id);"},';
+						 {"type": "Button", "label": "Refresh", "onClick": "echo CTN_RefreshCloudTrax($id);"},';
 		} else
 			$log->LogMessage('There is no SSIDs retrieved from CloudTrax');
 		
