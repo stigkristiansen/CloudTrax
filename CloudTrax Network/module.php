@@ -31,13 +31,12 @@ class CloudTraxNetworkModule extends IPSModule {
 		$log = new CTLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		
 		$key = $this->ReadPropertyString('key');
-		if(strlen($key)==0)
-			return;
-		
 		$secret = $this->ReadPropertyString('secret');
-		if(strlen($secret)==0)
-			return;
-
+		
+		if(strlen($key)==0 || strlen($secret)==0) {
+			$log->LogMessage('Misisng Key or Secret. Aborting ApplyChanges()');
+			return false;
+		}
 		$log->LogMessage('Read Key and Secret');
 		
 		$ctc = new CloudTraxCommunication($key, $secret);
@@ -219,8 +218,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			$log->LogMessage('There is no network(s) retrieved from CloudTrax');
 			$options = '{ "type": "Label", "label": "Register API Authentication information and press Apply!" },';
 		}		
-		//IPS_LogMessage('CloudTrax',"GetConfigForm - Got buffer: ".$this->GetBuffer($this->InstanceID.'networks'));
-	   
+			   
 		$ssidsJSON = $this->GetBuffer($this->InstanceID.'ssids') ;
 		$ssidInfo = '{ "type": "Label", "label": "Select network and press Apply to see available SSIDs!" },';
 		if(strlen($ssidsJSON) > 0){
@@ -248,9 +246,8 @@ class CloudTraxNetworkModule extends IPSModule {
 						}';
 
 		return $form;
-   }
 
-    
+	}
 	
 	public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
 		switch ($Message) {
@@ -263,8 +260,8 @@ class CloudTraxNetworkModule extends IPSModule {
 				}
 				break;
 		}	
-	}
 
+	}
 		
 }
 
