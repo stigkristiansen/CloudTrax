@@ -64,7 +64,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			$this->SetBuffer($this->InstanceID.'ssids', '');
 		}
 		
-		if($selectedNetwork>0) && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
+		if($selectedNetwork>0 && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
 			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
 			$ctn->Refresh();
 			$ssids = $ctn->GetSSIDs();
