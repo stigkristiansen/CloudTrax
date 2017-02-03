@@ -31,14 +31,17 @@ class CloudTraxCommunication {
 	public function ConfigureLogging($Log, $InstanceName){
 		$this->log = $Log;
 		$this->instanceName = $InstanceName;
+		
 	}
 	
 	public function Log() {
 		return $this->log;
+		
 	}
 	
 	public function InstanceName() {
 		return $this->instanceName;
+		
 	}
 	
 	public function CallApiServer($method, $endpoint, $data) {
@@ -142,11 +145,9 @@ class CloudTraxNetwork {
 	}
 	
 	public function EnableSSID($SSID, $Enable) {
-		$ssid = $this->GetSSIDNumberByName($SSID);
-		
 		$log = new CTLogging($this->com->Log(), $this->com->InstanceName());
-		//echo "SSID number is: ".$ssid;
-		                                      	
+		
+		$ssid = $this->GetSSIDNumberByName($SSID);
 		if($ssid){
 			$data = array( 'ssids' => 
 				array( strval($ssid) => 
@@ -177,7 +178,6 @@ class CloudTraxNetwork {
 			$log->LogMessageError('Invalid SSID spesified: '.$SSID);
 			return false;
 		}
-			
 
 	}
 	
@@ -319,7 +319,7 @@ class CloudTraxNetwork {
 }
 
 class CloudTraxNetworks {
-	private $networks=false;
+	private $networks=NULL;
 	private $com;
 	
 	public function __construct($Com) {
@@ -336,6 +336,34 @@ class CloudTraxNetworks {
 		return $this->networks;
 		
 	}
+	
+	public function CreateNetwork($Name, $Password, $Timezone, $Country) {
+		$log = new CTLogging($this->com->Log(), $this->com->InstanceName());
+		
+		$data = array("name"=>$Name, "password"=>$Password,"timezone"=>$Timezone,"country_code"=>$Country);
+		
+		try {
+			$result = json_decode($this->com->CallApiServer(Method::POST, "/network", $data),true);
+		} catch (Exeption $e) {
+			$log->LogMessageError($e->errorMessage);
+			return false;
+		}
+		
+		if(array_key_exists('errors', $result)) {
+			$errorMessage = '';
+			foreach($result['errors'] as $error) {
+					$errorMessage.=strlen($errorMessage)==0?$error['message']:', '.$error['message'];
+			}
+			$log->LogMessageError($errorMessage);
+			return false;
+		} else {
+			$log->LogMessage("A new network was created: ".$Name);
+			$this->Refresh();
+			return true;
+		}	
+		
+	}
+	
 	
 	public function GetNetworkIdByName($Network) {
 		$found = false;
