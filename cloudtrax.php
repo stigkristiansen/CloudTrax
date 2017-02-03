@@ -357,7 +357,6 @@ class CloudTraxNetworks {
 			$log->LogMessageError($errorMessage);
 			return false;
 		} else {
-			$log->LogMessage("A new network was created: ".$Name);
 			$this->Refresh();
 			return true;
 		}	

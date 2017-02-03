@@ -34,7 +34,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		$secret = $this->ReadPropertyString('secret');
 		
 		if(strlen($key)==0 || strlen($secret)==0) {
-			$log->LogMessage('Misisng Key or Secret. Aborting ApplyChanges()');
+			$log->LogMessage('Missing Key or Secret. Aborting ApplyChanges()');
 			return;
 		}
 		
@@ -59,8 +59,6 @@ class CloudTraxNetworkModule extends IPSModule {
 			$log->LogMessage('Available networks are already retrieved');
 		
 		$selectedNetwork = $this->ReadPropertyString('network');
-		//IPS_LogMessage('Test','ssids-buffer: '.$this->GetBuffer($this->InstanceID.'ssids'));
-		//IPS_LogMessage('Test','selectedNetwork: '.$selectedNetwork);
 		if($selectedNetwork>0 && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
 			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
 			$ctn->Refresh();
@@ -81,6 +79,29 @@ class CloudTraxNetworkModule extends IPSModule {
 		return true;
 		
     }
+	
+	public function CreateNetwork(string $Name, string $Password, string $Timezone, string $CountryCode){
+		$log = new CTLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		
+		$key = $this->ReadPropertyString('key');
+		$secret = $this->ReadPropertyString('secret');
+		
+		if(strlen($key)==0 || strlen($secret)==0) {
+			$log->LogMessage('Missing Key or Secret. Aborting CreateNetwork()');
+			return false;
+		}
+		
+		$ctc = new CloudTraxCommunication($key, $secret);
+		$ctc->ConfigureLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		$ctns = new CloudTraxNetworks ($ctc);
+		
+		if($ctns->CreateNetwork($Name, $Password, $Timezone, $CountryCode)) {
+			$networks = $ctns->GetNetworks();
+			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));
+		} else
+			$Log->LogMessage('Failed to create the new network!');
+		
+	}
 	
 	public function EnableSSID(string $SSID, bool $Enable) {
 		$log = new CTLogging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
