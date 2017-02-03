@@ -52,6 +52,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			else {
 				echo "Failed to retrieve networks. Check log for details";
 				$log->LogMessage('Unable to retrieve networks');
+				return false;
 			}
 			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));	
 		} else
@@ -195,9 +196,8 @@ class CloudTraxNetworkModule extends IPSModule {
 	public function RefreshCloudTrax() {
 			$this->SetBuffer($this->InstanceID.'ssids','');
 			$this->SetBuffer($this->InstanceID.'networks','');
-			$this->ApplyChanges();
-			
-			return "Please reload the configuration form to show updated information!";
+			if($this->ApplyChanges())
+				return "Please reload the configuration form to show updated information!";
 			
 	}
    
