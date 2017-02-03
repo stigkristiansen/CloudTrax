@@ -59,8 +59,8 @@ class CloudTraxNetworkModule extends IPSModule {
 			$log->LogMessage('Available networks are already retrieved');
 		
 		$selectedNetwork = $this->ReadPropertyString('network');
-		IPS_LogMessage('Test','ssids-buffer: '.$this->GetBuffer($this->InstanceID.'ssids'));
-		IPS_LogMessage('Test','selectedNetwork: '.$selectedNetwork);
+		//IPS_LogMessage('Test','ssids-buffer: '.$this->GetBuffer($this->InstanceID.'ssids'));
+		//IPS_LogMessage('Test','selectedNetwork: '.$selectedNetwork);
 		if($selectedNetwork>0 && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
 			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
 			$ctn->Refresh();
@@ -77,6 +77,8 @@ class CloudTraxNetworkModule extends IPSModule {
 			$log->LogMessage('Available ssids are already retrieved');
 					
 		//$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+		
+		return true;
 		
     }
 	
