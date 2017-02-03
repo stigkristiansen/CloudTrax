@@ -35,8 +35,9 @@ class CloudTraxNetworkModule extends IPSModule {
 		
 		if(strlen($key)==0 || strlen($secret)==0) {
 			$log->LogMessage('Misisng Key or Secret. Aborting ApplyChanges()');
-			return false;
+			return;
 		}
+		
 		$log->LogMessage('Read Key and Secret');
 		
 		$ctc = new CloudTraxCommunication($key, $secret);
@@ -48,9 +49,10 @@ class CloudTraxNetworkModule extends IPSModule {
 			$networks = $ctns->GetNetworks();
 			if($networks)
 				$log->LogMessage('Retrieved all networks: '. print_r($networks, true));
-			else
+			else {
+				echo "Failed to retrieve networks. Check log for details";
 				$log->LogMessage('Unable to retrieve networks');
-			
+			}
 			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));	
 		} else
 			$log->LogMessage('Available networks are already retrieved');
