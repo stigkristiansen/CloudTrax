@@ -59,7 +59,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			$log->LogMessage('Available networks are already retrieved');
 		
 		$selectedNetwork = $this->ReadPropertyString('network');
-		if($selectedNetwork>0 && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
+		if($selectedNetwork>0) && strlen($this->GetBuffer($this->InstanceID.'ssids'))==0){
 			$ctn = new CloudTraxNetwork($ctc, $selectedNetwork);
 			$ctn->Refresh();
 			$ssids = $ctn->GetSSIDs();
@@ -98,6 +98,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		if($ctns->CreateNetwork($Name, $Password, $Timezone, $CountryCode)) {
 			$networks = $ctns->GetNetworks();
 			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));
+			$log->LogMessage('The network was created:' $Name);
 		} else {
 			$log->LogMessage('Failed to create the new network!');
 			return false;
