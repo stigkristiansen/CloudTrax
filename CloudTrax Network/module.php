@@ -99,7 +99,7 @@ class CloudTraxNetworkModule extends IPSModule {
 			$networks = $ctns->GetNetworks();
 			$this->SetBuffer($this->InstanceID.'networks', json_encode($networks, true));
 		} else {
-			$Log->LogMessage('Failed to create the new network!');
+			$log->LogMessage('Failed to create the new network!');
 			return false;
 		}
 		
