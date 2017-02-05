@@ -136,7 +136,7 @@ class CloudTraxNetworkModule extends IPSModule {
 		
 		$ssids = $this->GetBuffer($this->InstanceID.'ssids');
 		if(strlen($ssids)>0)
-			$ctn->SetSSIDs(json_decode(ssids, true));
+			$ctn->SetSSIDs(json_decode($ssids, true));
 		else
 			$ctn->Refresh();
 		
